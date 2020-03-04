@@ -1,0 +1,483 @@
+swagger: "2.0"
+info:
+  description: "The APIs for zlz - a photo sharing social network - are listed below for your use. For the source code of our project, please see
+    [https://github.com/cis557/cis557-project-photo-sharing-social-network-app-zlz](https://github.com/cis557/cis557-project-photo-sharing-social-network-app-zlz)"
+  version: "1.0.0"
+  title: "zlz - photo sharing social network"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "zzm@seas.upenn.edu"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8081"
+tags:
+- name: "post"
+  description: "Everything about post management"
+- name: "follow"
+  description: "Follow/unfollow operations"
+- name: "like"
+  description: "Like/unlike operations"
+- name: "comment"
+  description: "Comment operations"
+- name: "user"
+  description: "Operations about user"
+- name: "profile"
+  description: "Operations about user profile"
+- name: "auth"
+  description: "User authentication"
+- name: "recommendation"
+  description: "Everything about recommendation"
+- name: "swagger"
+  description: "Interactive APIs with Swagger UI"
+schemes:
+- "http"
+paths:
+  /user/{id}:
+    get:
+      tags:
+      - user
+      summary: READ a user by its id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the user you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the user
+  /trending:
+    get:
+      tags:
+      - recommendation
+      summary: READ trending posts
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: start
+        type: "string"
+        description: start index of the trending posts you want to fetch
+        required: true
+      - in: query
+        name: posts
+        type: "string"
+        description: number of trending posts you want to fetch
+        required: true
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: parameters are not in valid integer format
+        404:
+          description: fail to get the trending posts / no more data available
+  /post:
+    post:
+      tags:
+      - post
+      summary: CREATE a post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: author
+        description: id of the author
+        required: true
+        type: string
+      - in: body
+        name: title
+        description: title of the post
+        required: true
+        type: string
+      - in: body
+        name: image
+        description: image of the post as a base64 string
+        required: true
+        type: string
+      - in: body
+        name: description
+        description: description of the post
+        required: true
+        type: string
+      - in: body
+        name: tag
+        description: tags of the post
+        required: true
+        type: string
+      responses:
+        201:
+          description: post created
+        400:
+          description: missing parameters
+        404:
+          description: fail to create the post
+  /post/{id}:
+    get:
+      tags:
+      - post
+      summary: READ a post by its id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the post you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the post
+  /post/put:
+    put:
+      tags:
+      - post
+      summary: UPDATE a post by its id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        type: "string"
+        description: id of the post you want to update
+        required: true
+      - in: body
+        name: title
+        type: "string"
+        description: updated title of the post
+        required: true
+      - in: body
+        name: description
+        type: "string"
+        description: updated description of the post you want to update
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to update the post
+  /post/delete:
+    delete:
+      tags:
+      - post
+      summary: DELETE a post by its id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        type: "string"
+        description: id of the post you want to delete
+        required: true
+      - in: body
+        name: userId
+        type: "string"
+        description: id of the current user
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to delete the post
+  /swagger:
+    get:
+      tags:
+      - swagger
+      summary: READ json file of swagger ui
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+  /like:
+    get:
+      tags:
+      - like
+      summary: READ whether the user has liked the post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: liker
+        type: "string"
+        description: id of the user
+        required: true
+      - in: query
+        name: likee
+        type: "string"
+        description: id of the post
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to check whether the user has liked the post
+  /like/put:
+    put:
+      tags:
+      - like
+      summary: UPDATE the liking relationship between a user and a post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: liker
+        type: "string"
+        description: id of the user
+        required: true
+      - in: body
+        name: likee
+        type: "string"
+        description: id of the post
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to like/unlike the post
+  /follow:
+    get:
+      tags:
+      - follow
+      summary: READ whether the follower has followed the followee
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: follower
+        type: "string"
+        description: id of the follower
+        required: true
+      - in: query
+        name: followee
+        type: "string"
+        description: id of the followee
+        required: true
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: missing parameters
+        404:
+          description: fail to check whether the follower has followed the followee
+  /follow/put:
+    put:
+      tags:
+      - follow
+      summary: UPDATE the followship between two users
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: liker
+        type: "string"
+        description: id of the follower
+        required: true
+      - in: body
+        name: likee
+        type: "string"
+        description: id of the followee
+        required: true
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: missing parameters
+        404:
+          description: fail to like/unlike the post
+  /comment:
+    put:
+      tags:
+      - comment
+      summary: CREATE a comment for a post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: postId
+        description: Pet object that needs to be added to the store
+        required: true
+        type: string
+      - in: body
+        name: authorId
+        description: Pet object that needs to be added to the store
+        required: true
+        type: string
+      - in: body
+        name: content
+        description: Pet object that needs to be added to the store
+        required: true
+        type: string
+      - in: body
+        name: mention
+        description: Pet object that needs to be added to the store
+        required: true
+        type: array
+      responses:
+        201:
+          description: comment created
+        400:
+          description: missing information
+        404:
+          description: fail to create the comment
+  /login:
+    post:
+      tags:
+      - auth
+      summary: user login
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: username
+        description: username of the user
+        required: true
+        type: string
+      - in: body
+        name: password
+        description: password of the user
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+  /register:
+    post:
+      tags:
+      - auth
+      summary: user registration
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: username
+        description: username of the user
+        required: true
+        type: string
+      - in: body
+        name: image
+        description: image of the user in base64 format
+        required: true
+        type: string
+      - in: body
+        name: password
+        description: password of the user
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+  /profile/{id}:
+    get:
+      tags:
+      - profile
+      summary: READ a user by its id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the user you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the user
+  /profile/comment/{id}:
+    get:
+      tags:
+      - profile
+      summary: READ comments for user profile by user id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the user you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the comments for user profile
+  /profile/like/{id}:
+    get:
+      tags:
+      - profile
+      summary: READ liking information for user profile by user id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the user you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the liking information for user profile
+  /profile/follow/{id}:
+    get:
+      tags:
+      - profile
+      summary: READ followship information for user profile by user id
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: "string"
+        description: id of the user you want to get
+        required: true
+      responses:
+        200:
+          description: successful operation
+        404:
+          description: fail to get the followship information for user profile

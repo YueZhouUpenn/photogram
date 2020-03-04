@@ -1,0 +1,51 @@
+const mongoose = require('mongoose')
+const UserSchema = new mongoose.Schema({
+    username:String,
+    password:String,
+    image:String,
+    join:Date,
+    post:[{
+        type:mongoose.SchemaTypes.ObjectId,
+        ref:'Posts'
+    }],
+    following:[{
+        followee: {
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'User'
+        },
+        time:Date
+    }],
+    followed:[{
+        follower:{
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'User'
+        },
+        time:Date
+    }],
+    liking:[{
+        likee:{
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'Posts'
+        },
+        time:Date
+    }],
+    commenting:[{
+        post:{
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'Posts'
+        },
+        time:Date
+    }],
+    mentioned:[{
+        post:{
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'Posts'
+        },
+        mentionBy:{
+            type:mongoose.SchemaTypes.ObjectId,
+            ref:'User'
+        },
+        time:Date
+    }]
+})
+module.exports= mongoose.model('User',UserSchema)

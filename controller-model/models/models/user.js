@@ -1,0 +1,67 @@
+const mongoose = require('mongoose')
+const passportLocalMongoose = require('passport-local-mongoose')
+const UserSchema = new mongoose.Schema({
+    username:String,
+    password:String,
+    image:String,
+    join:Date,
+    following:[{
+        followee:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'User'
+            },
+            username:String
+        },
+        time:Date
+    }],
+    followed:[{
+        follower:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'User'
+            },
+            username:String
+        },
+        time:Date
+    }],
+    liking:[{
+        likee:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'Posts'
+            },
+            title:String
+        },
+        time:Date
+    }],
+    commenting:[{
+        post:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'Posts'
+            },
+            title:String
+        },
+        time:Date
+    }],
+    mentioned:[{
+        post:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'Posts'
+            },
+            title:String
+        },
+        mentionBy:{
+            id:{
+                type:mongoose.SchemaTypes.ObjectId,
+                ref:'User'
+            },
+            username:String
+        },
+        time:Date
+    }]
+})
+UserSchema.plugin(passportLocalMongoose)
+module.exports= mongoose.model('User',UserSchema)
